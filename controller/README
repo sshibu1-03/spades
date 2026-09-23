@@ -1,0 +1,379 @@
+# ♠ Spades MVC
+
+A four-player Spades card game built with **Python** and **Pygame** using the **Model-View-Controller (MVC)** design pattern.
+
+The game supports human players, computer-controlled opponents, team-based scoring, bidding, Nil bids, bags, and standard Spades trick-taking rules.
+
+## 🎮 Features
+
+* Four-player Spades gameplay
+* Two teams with partners sitting opposite each other
+* 52-card standard deck
+* 13 cards dealt to each player
+* Spades are always the trump suit
+* Players must follow the suit that was led when possible
+* Spades cannot normally be led until they have been broken
+* Bidding from 0–13 tricks
+* Nil bidding
+* Partnership bids
+* Team scoring
+* Bag / sandbag tracking
+* 100-point penalty after accumulating 10 bags
+* Failed bid penalties
+* First team to reach 500 points wins
+* Dealer rotation between hands
+* Smart computer opponents
+* Local multiplayer privacy screen
+* Sound effects
+* Custom card graphics and game-table interface
+
+## 👥 Game Modes
+
+The game currently supports:
+
+* **1 Human + 3 Computer Players**
+* **2 Humans + 2 Computer Players**
+* **4 Local Human Players**
+
+When multiple human players are playing on the same computer, the game hides each player's cards until it is their turn and they select **Reveal Hand**.
+
+## 🤖 Computer AI
+
+Computer players do more than randomly select a legal card.
+
+The AI considers:
+
+* Card strength
+* High cards such as Aces and Kings
+* Number of Spades in its hand
+* Short suits that may allow trumping
+* Its current bid
+* Its team's combined bid
+* How many tricks the team still needs
+* Whether its partner is currently winning the trick
+* Whether its partner bid Nil
+* Whether the AI itself bid Nil
+* Whether a high card should be saved
+* Whether a lower card can safely win the trick
+
+The AI also attempts to protect a partner who has bid Nil by taking tricks that the Nil bidder may accidentally win.
+
+## 🃏 Basic Rules
+
+Spades is played with four players divided into two teams.
+
+```text
+          Player 3
+           Team 1
+
+Player 2           Player 4
+ Team 2             Team 2
+
+          Player 1
+           Team 1
+```
+
+Players 1 and 3 are partners.
+
+Players 2 and 4 are partners.
+
+Each player receives 13 cards.
+
+Before the hand begins, every player bids how many tricks they expect to win.
+
+The two partner bids are combined into the team's contract.
+
+### Trick Taking
+
+The player to the dealer's left leads the first trick.
+
+Players must follow the suit that was led if they have a card of that suit.
+
+If a player does not have the led suit, they may play another suit or a Spade.
+
+The highest card of the led suit wins unless a Spade is played.
+
+If one or more Spades are played, the highest Spade wins.
+
+The winner of the trick leads the next trick.
+
+## ♠ Breaking Spades
+
+Spades are always trump.
+
+A player normally cannot lead a Spade until Spades have been **broken**.
+
+Spades become broken when a player cannot follow the suit that was led and uses a Spade to trump the trick.
+
+If a player only has Spades remaining, they may lead a Spade even if Spades have not previously been broken.
+
+## 📊 Scoring
+
+### Successful Bid
+
+If a team meets or exceeds its combined bid:
+
+```text
+Bid × 10 points
+```
+
+Example:
+
+```text
+Team Bid: 6
+Tricks Won: 6
+
+Score = 60 points
+```
+
+### Bags
+
+Extra tricks beyond the team's bid are called **bags**.
+
+Example:
+
+```text
+Team Bid: 6
+Tricks Won: 8
+
+Score = 62
+Bags = 2
+```
+
+Bags carry over between hands.
+
+When a team reaches 10 bags:
+
+```text
+-100 points
+```
+
+### Failed Bid
+
+If a team does not reach its combined bid, the team is set.
+
+Example:
+
+```text
+Team Bid: 7
+Tricks Won: 6
+
+Score = -70
+```
+
+### Nil Bid
+
+A player may bid **Nil**, meaning they expect to win zero tricks.
+
+Successful Nil:
+
+```text
+0 tricks won
++100 points
+```
+
+Failed Nil:
+
+```text
+1 or more tricks won
+-100 points
+```
+
+The current implementation does not count tricks taken by a failed Nil bidder toward the partner's contract.
+
+## 🏆 Winning
+
+The game continues through multiple hands.
+
+The first team to reach **500 points** wins the game.
+
+## 🏗️ MVC Architecture
+
+The project follows the Model-View-Controller design pattern.
+
+```text
+Spades_MVC/
+│
+├── model/
+│   ├── Card.py
+│   ├── Deck.py
+│   ├── Player.py
+│   ├── AIPlayer.py
+│   ├── Team.py
+│   └── GameModel.py
+│
+├── view/
+│   ├── GameView.py
+│   ├── MenuView.py
+│   │
+│   ├── assets/
+│   │   ├── cards/
+│   │   ├── backgrounds/
+│   │   └── icons/
+│   │
+│   └── sounds/
+│
+└── controller/
+    ├── main.py
+    ├── GameController.py
+    └── MenuController.py
+```
+
+### Model
+
+The Model contains the main game data and rules.
+
+Responsibilities include:
+
+* Cards
+* Deck creation
+* Players
+* Teams
+* AI decisions
+* Bidding
+* Valid card checking
+* Trick winners
+* Spades-breaking rules
+* Score calculation
+* Bags
+* Nil bids
+* Game win conditions
+
+### View
+
+The View handles everything the player sees or hears.
+
+Responsibilities include:
+
+* Main menu
+* Card graphics
+* Player hands
+* Game table
+* Score display
+* Bidding interface
+* Privacy screen
+* Buttons
+* Sound effects
+* Game-over screen
+
+### Controller
+
+The Controller connects the Model and View.
+
+Responsibilities include:
+
+* Mouse input
+* Player card selections
+* Bid selections
+* AI turns
+* Game timing
+* Trick transitions
+* Menu navigation
+* Starting new hands
+* Restarting the game
+
+## 💻 Requirements
+
+* Python 3
+* Pygame
+
+## ⚙️ Installation
+
+Clone or download the repository.
+
+Open the project folder in VS Code.
+
+Install Pygame:
+
+```bash
+pip install pygame
+```
+
+## 🎯 Project Goals
+
+This project was created to practice and demonstrate:
+
+* Object-Oriented Programming
+* MVC software architecture
+* Inheritance
+* Game-state management
+* Algorithms
+* AI decision making
+* Event-driven programming
+* Data structures
+* User-interface design
+* Software organization
+* Debugging and testing
+
+## 🚀 Possible Future Improvements
+
+Future versions could include:
+
+* Online multiplayer
+* Private multiplayer rooms
+* Improved AI card memory
+* Additional AI difficulty levels
+* Blind Nil
+* Custom house rules
+* Player usernames
+* Player avatars
+* Animated card movement
+* Improved sound effects
+* Background music
+* Match statistics
+* Win/loss records
+* Saved game settings
+* Additional themes and card designs
+
+## 📌 Technologies Used
+
+* **Python**
+* **Pygame**
+* **MVC Architecture**
+* **Object-Oriented Programming**
+
+## 📄 License
+
+This project is intended for educational and portfolio purposes.
+
+## ▶️ How to Run the Program
+
+1. Make sure **Python 3** is installed on your computer.
+
+2. Download or clone this repository.
+
+3. Open the project folder in **VS Code**.
+
+4. Open the VS Code terminal by selecting:
+
+```text
+Terminal → New Terminal
+```
+
+5. Install Pygame if it is not already installed:
+
+```bash
+pip install pygame
+```
+
+6. Run the game with:
+
+```bash
+python controller/main.py
+```
+
+On some computers, you may need to use:
+
+```bash
+python3 controller/main.py
+```
+
+The **Spades** main menu should open.
+
+Choose one of the available game modes:
+
+* 1 Human + 3 Computer Players
+* 2 Humans + 2 Computer Players
+* 4 Local Human Players
+
+7. To stop the program, close the game window or press **ESC**.
